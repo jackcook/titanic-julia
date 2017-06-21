@@ -31,7 +31,7 @@ function clean(dataset)
         for j in 0:2
             guess_df = dropna(dataset[(dataset[:Sex] .== i) .& (dataset[:Pclass] .== j + 1), :][:Age])
             age_guess = convert(Int64, round((median(guess_df) / 0.5 + 0.5) * 0.5))
-            dataset[:Age][isna(dataset[:Age]) .& (dataset[:Sex] .== i) .& (dataset[:Pclass] .== j + 1)] = age_guess
+            dataset[:Age][isna.(dataset[:Age]) .& (dataset[:Sex] .== i) .& (dataset[:Pclass] .== j + 1)] = age_guess
         end
     end
 
@@ -47,7 +47,7 @@ function clean(dataset)
     dataset[:IsAlone][(dataset[:SibSp] .== 0) .& (dataset[:Parch] .== 0)] = 1
 
     freq_port = mode(dropna(dataset[:Embarked]))
-    dataset[:Embarked][isna(dataset[:Embarked])] = freq_port
+    dataset[:Embarked][isna.(dataset[:Embarked])] = freq_port
     dataset[:Port] = 0
 
     for i in 1:size(dataset, 1)
@@ -61,7 +61,7 @@ function clean(dataset)
     delete!(dataset, :Embarked)
 
     median_fare = median(dropna(dataset[:Fare]))
-    dataset[:Fare][isna(dataset[:Fare])] = median_fare
+    dataset[:Fare][isna.(dataset[:Fare])] = median_fare
 
     delete!(dataset, :Cabin)
     delete!(dataset, :Name)
