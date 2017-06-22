@@ -2,6 +2,8 @@ using DataFrames
 using DecisionTree
 using ScikitLearn
 
+fillna(dv::DataVector, value::Any) = dv[isna.(dv)] = value
+
 function clean(dataset)
     dataset[:Title] = 0
 
@@ -47,7 +49,8 @@ function clean(dataset)
     dataset[:IsAlone][(dataset[:SibSp] .== 0) .& (dataset[:Parch] .== 0)] = 1
 
     freq_port = mode(dropna(dataset[:Embarked]))
-    dataset[:Embarked][isna.(dataset[:Embarked])] = freq_port
+    fillna(dataset[:Embarked], freq_port)
+
     dataset[:Port] = 0
 
     for i in 1:size(dataset, 1)
@@ -57,8 +60,6 @@ function clean(dataset)
             "Q" => 2
         ), dataset[:Embarked][i], 0)
     end
-
-    delete!(dataset, :Embarked)
 
     median_fare = median(dropna(dataset[:Fare]))
     dataset[:Fare][isna.(dataset[:Fare])] = median_fare
