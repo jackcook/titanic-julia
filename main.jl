@@ -61,6 +61,8 @@ function clean(dataset)
         ), dataset[:Embarked][i], 0)
     end
 
+    delete!(dataset, :Embarked)
+
     median_fare = median(dropna(dataset[:Fare]))
     dataset[:Fare][isna.(dataset[:Fare])] = median_fare
 
