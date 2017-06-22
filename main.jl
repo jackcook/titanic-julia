@@ -4,7 +4,7 @@ using ScikitLearn
 
 fillna!(dv::DataVector, value::Any) = dv[isna.(dv)] = value
 
-function clean(dataset)
+function clean!(dataset)
     dataset[:Title] = 0
 
     for i in 1:size(dataset, 1)
@@ -75,10 +75,10 @@ function clean(dataset)
     return dataset
 end
 
-train_df = clean(readtable("./input/train.csv"))
+train_df = clean!(readtable("./input/train.csv"))
 delete!(train_df, :PassengerId)
 
-test_df = clean(readtable("./input/test.csv"))
+test_df = clean!(readtable("./input/test.csv"))
 passenger_ids = test_df[:PassengerId]
 
 Y_train = train_df[:Survived]
@@ -86,7 +86,7 @@ X_train = delete!(train_df, :Survived)
 
 X_test = delete!(test_df, :PassengerId)
 
-model = DecisionTreeClassifier()
+model = RandomForestClassifier()
 DecisionTree.fit!(model, Array(X_train), Array(Y_train))
 
 Y_pred = ScikitLearn.predict(model, Array(X_test))
