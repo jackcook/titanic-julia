@@ -2,7 +2,7 @@ using DataFrames
 using DecisionTree
 using ScikitLearn
 
-fillna(dv::DataVector, value::Any) = dv[isna.(dv)] = value
+fillna!(dv::DataVector, value::Any) = dv[isna.(dv)] = value
 
 function clean(dataset)
     dataset[:Title] = 0
@@ -49,7 +49,7 @@ function clean(dataset)
     dataset[:IsAlone][(dataset[:SibSp] .== 0) .& (dataset[:Parch] .== 0)] = 1
 
     freq_port = mode(dropna(dataset[:Embarked]))
-    fillna(dataset[:Embarked], freq_port)
+    fillna!(dataset[:Embarked], freq_port)
 
     dataset[:Port] = 0
 
